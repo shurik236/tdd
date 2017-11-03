@@ -65,8 +65,8 @@ namespace TagsCloudVisualization
 
             public void PlaceFirstRect_InCenter(int centerX, int centerY, int width, int height)
             {
-                var nextRectangle = new CircularCloudLayouter(new Point(centerX, centerY))
-                    .PutNextRectangle(new Size(width, height));
+                _layout = new CircularCloudLayouter(new Point(centerX, centerY));
+                var nextRectangle = _layout.PutNextRectangle(new Size(width, height));
                 var expectedRectangle = new Rectangle(centerX - width / 2, centerY - height / 2, width, height);
 
                 nextRectangle.Should().Be(expectedRectangle);
@@ -95,9 +95,9 @@ namespace TagsCloudVisualization
                 TestName = "center is (120, 50), rectangles are 100x110 and 50x90")]
             public void PlaceTwoRects_WithoutIntersections(int centerX, int centerY, int w, int h, int ww, int hh)
             {
-                var layouter = new CircularCloudLayouter(new Point(centerX, centerY));
-                var firstRectangle = layouter.PutNextRectangle(new Size(w, h));
-                var secondRectangle = layouter.PutNextRectangle(new Size(ww, hh));
+                _layout = new CircularCloudLayouter(new Point(centerX, centerY));
+                var firstRectangle = _layout.PutNextRectangle(new Size(w, h));
+                var secondRectangle = _layout.PutNextRectangle(new Size(ww, hh));
 
                 firstRectangle.IntersectsWith(secondRectangle).Should().BeFalse();
             }
