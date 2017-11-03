@@ -15,14 +15,15 @@ namespace TagsCloudVisualization
             var img = new Bitmap(canvasW, canvasH);
             var layouter = new CircularCloudLayouter(center);
             var g = Graphics.FromImage(img);
+            g.FillRectangle(new SolidBrush(Color.Blue), 0, 0, canvasW, canvasH);
             g.DrawLine(Pens.Red, center.X, 0, center.X, canvasH);
             g.DrawLine(Pens.Red, 0, center.Y, canvasW, center.Y);
-            for (var i = 0; i < 100; i++)
+            for (var i = 0; i < 200; i++)
             {
-                var nextRectangle = layouter.PutNextRectangle(new Size(50, 30));
+                var nextRectangle = layouter.PutNextRectangle(new Size(20, 20));
                 g.DrawRectangle(Pens.White, nextRectangle);                
             }
-            img.Save(@"C:\Users\shuri\Desktop\spur\tdd" + Path.DirectorySeparatorChar + fileName +".bmp");
+            img.Save(@".\"+fileName+".bmp");
         }
 
         public static void VisualizeLayout(CircularCloudLayouter layout, string fileName)
@@ -30,13 +31,14 @@ namespace TagsCloudVisualization
             var center = layout.GetCenter();
             var img = new Bitmap(center.X*2, center.Y*2);
             var g = Graphics.FromImage(img);
+            g.FillRectangle(new SolidBrush(Color.Blue), 0, 0, center.X*2, center.Y*2);
             g.DrawLine(Pens.Red, center.X, 0, center.X, center.Y*2);
             g.DrawLine(Pens.Red, 0, center.Y, center.X*2, center.Y);
             foreach (var rect in layout.GetCloud().GetRectangles())
             {
                 g.DrawRectangle(Pens.White, rect);
             }
-            img.Save(@"C:\Users\shuri\Desktop\spur\tdd" + Path.DirectorySeparatorChar + fileName + ".bmp");
+            img.Save(@".\" + fileName + ".bmp");
         }
 
         public static void Main()
