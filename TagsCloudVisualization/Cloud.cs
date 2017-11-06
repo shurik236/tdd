@@ -1,35 +1,38 @@
-﻿using System;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Runtime.Remoting.Metadata.W3cXsd2001;
-using System.Text;
 
 namespace TagsCloudVisualization
 {
-    public class Cloud
+    public class Cloud : IEnumerable<Rectangle>
+
     {
-        private readonly List<Rectangle> rectangles;
-        public int Count { get; private set; }
+        public List<Rectangle> Rectangles { get; }
+        public int Count => Rectangles.Count;
         public Cloud()
         {
-            rectangles = new List<Rectangle>();
-        }
-
-        public List<Rectangle> GetRectangles()
-        {
-            return rectangles;
+            Rectangles = new List<Rectangle>();
         }
 
         public bool IntersectsWith(Rectangle rect)
         {
-            return rectangles.Any(r => r.IntersectsWith(rect));
+            return Rectangles.Any(r => r.IntersectsWith(rect));
         }
 
         public void AppendRectangle(Rectangle rect)
         {
-            rectangles.Add(rect);
-            Count++;
+            Rectangles.Add(rect);
+        }
+
+        public IEnumerator<Rectangle> GetEnumerator()
+        {
+            return ((IEnumerable<Rectangle>)Rectangles).GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return ((IEnumerable<Rectangle>)Rectangles).GetEnumerator();
         }
     }
 }

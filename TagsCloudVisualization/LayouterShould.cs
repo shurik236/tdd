@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
+﻿using System.Drawing;
 using FluentAssertions;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
@@ -12,16 +8,16 @@ namespace TagsCloudVisualization
     public class LayouterShould
     {
         private static CircularCloudLayouter _layout;
-        [TestFixture]
-        public class ThrowException
-        {
 
-            [TestCase(-127, 0, TestName = "on negative X")]
-            [TestCase(0, -127, TestName = "on negative Y")]
-            [TestCase(-127, -127, TestName = "on both negative")]
-            public void ThrowException_OnNegativeComponents(int x, int y)
+        private static void SaveVisualizationOnFailure()
+        {
+            var testResult = TestContext.CurrentContext.Result.Outcome;
+            var testName = TestContext.CurrentContext.Test.FullName;
+
+            if (Equals(testResult, ResultState.Failure) ||
+                Equals(testResult, ResultState.Error))
             {
-                Assert.Throws<ArgumentException>(() => new CircularCloudLayouter(new Point(x, y)));
+                Visualization.VisualizeLayout(_layout, testName);
             }
         }
 
@@ -35,21 +31,15 @@ namespace TagsCloudVisualization
             {
                 var expectedCenter = new Point(x, y);
                 _layout = new CircularCloudLayouter(new Point(x, y));
-                _layout.GetCenter().Should().Be(expectedCenter);
+                _layout.Center.Should().Be(expectedCenter);
             }
 
             [TearDown]
             public void TearDown()
             {
-                var testResult = TestContext.CurrentContext.Result.Outcome;
-                var testName = TestContext.CurrentContext.Test.FullName;
-
-                if (Equals(testResult, ResultState.Failure) ||
-                    Equals(testResult, ResultState.Error))
-                {
-                    Visualization.VisualizeLayout(_layout, testName);
-                }
+                SaveVisualizationOnFailure();
             }
+            
         }
 
         [TestFixture]
@@ -75,14 +65,7 @@ namespace TagsCloudVisualization
             [TearDown]
             public void TearDown()
             {
-                var testResult = TestContext.CurrentContext.Result.Outcome;
-                var testName = TestContext.CurrentContext.Test.FullName;
-
-                if (Equals(testResult, ResultState.Failure) ||
-                    Equals(testResult, ResultState.Error))
-                {
-                    Visualization.VisualizeLayout(_layout, testName);
-                }
+                SaveVisualizationOnFailure();
             }
         }
 
@@ -93,11 +76,11 @@ namespace TagsCloudVisualization
                 TestName = "when center is (128, 128), rectangles are 120x100 and 60x50")]
             [TestCase(120, 50, 100, 110, 50, 90,
                 TestName = "center is (120, 50), rectangles are 100x110 and 50x90")]
-            public void PlaceTwoRects_WithoutIntersections(int centerX, int centerY, int w, int h, int ww, int hh)
+            public void PlaceTwoRects_WithoutIntersections(int centerX, int centerY, int w1, int h1, int w2, int h2)
             {
                 _layout = new CircularCloudLayouter(new Point(centerX, centerY));
-                var firstRectangle = _layout.PutNextRectangle(new Size(w, h));
-                var secondRectangle = _layout.PutNextRectangle(new Size(ww, hh));
+                var firstRectangle = _layout.PutNextRectangle(new Size(w1, h1));
+                var secondRectangle = _layout.PutNextRectangle(new Size(w2, h2));
 
                 firstRectangle.IntersectsWith(secondRectangle).Should().BeFalse();
             }
@@ -105,14 +88,7 @@ namespace TagsCloudVisualization
             [TearDown]
             public void TearDown()
             {
-                var testResult = TestContext.CurrentContext.Result.Outcome;
-                var testName = TestContext.CurrentContext.Test.FullName;
-
-                if (Equals(testResult, ResultState.Failure) ||
-                    Equals(testResult, ResultState.Error))
-                {
-                    Visualization.VisualizeLayout(_layout, testName);
-                }
+                SaveVisualizationOnFailure();
             }
         }
     }

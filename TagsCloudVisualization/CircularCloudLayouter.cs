@@ -1,36 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Dynamic;
+﻿using System.Drawing;
 using System.Linq;
-using System.Text;
-using NUnit.Framework.Api;
 
 namespace TagsCloudVisualization
 {
     public class CircularCloudLayouter
     {
-        private readonly Point center;
-        private readonly Cloud cloud;
+        public Point Center { get; }
+        public Cloud Cloud { get; }
         private readonly SpiralWalker spiral;
-        
-        public Point GetCenter()
-        {
-            return center;
-        }
-
-        public Cloud GetCloud()
-        {
-            return cloud;
-        }
 
         public CircularCloudLayouter(Point center)
         {
-            if (center.X < 0 || center.Y < 0)
-                throw new ArgumentException("Center can't have negative components!");
-
-            this.center = center;
-            cloud = new Cloud();
+            Center = center;
+            Cloud = new Cloud();
             spiral = new SpiralWalker(center, 0.1, 0, 1);
         }
 
@@ -38,19 +20,19 @@ namespace TagsCloudVisualization
         {
             Rectangle newRect;
 
-            if (cloud.Count == 0)
+            if (!Cloud.Any())
             {
-                newRect = new Rectangle(center, rectangleSize);
+                newRect = new Rectangle(Center, rectangleSize);
                 newRect.Offset((newRect.Left - newRect.Right) / 2, (newRect.Top - newRect.Bottom) / 2);
-                cloud.AppendRectangle(newRect);
+                Cloud.AppendRectangle(newRect);
                 return newRect;
             }
             do
             {
                 newRect = new Rectangle(spiral.GetNextPoint(), rectangleSize);
-            } while (cloud.IntersectsWith(newRect));
+            } while (Cloud.IntersectsWith(newRect));
 
-            cloud.AppendRectangle(newRect);
+            Cloud.AppendRectangle(newRect);
             return newRect;
         }
 

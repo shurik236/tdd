@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
+﻿using System.Drawing;
+using static System.Math;
 
 namespace TagsCloudVisualization
 {
@@ -16,7 +13,7 @@ namespace TagsCloudVisualization
 
         public SpiralWalker(Point center, double step, double initialRadius, double sparcity)
         {
-            this.Center = center;
+            Center = center;
             angularStep = step;
             this.initialRadius = initialRadius;
             this.sparcity = sparcity;
@@ -31,8 +28,8 @@ namespace TagsCloudVisualization
 
         private Point ToCartesianPoint(double r, double phi)
         {
-            var x = Math.Round(r * Math.Cos(phi)) + Center.X;
-            var y = Math.Round(r * Math.Sin(phi)) + Center.Y;
+            var x = Round(r * Cos(phi)) + Center.X;
+            var y = Round(r * Sin(phi)) + Center.Y;
 
             return new Point((int)x, (int)y);
         }

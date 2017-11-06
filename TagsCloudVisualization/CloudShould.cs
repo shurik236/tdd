@@ -1,26 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
+﻿using System.Drawing;
 using FluentAssertions;
 using NUnit.Framework;
-using NUnit.Framework.Interfaces;
 
 namespace TagsCloudVisualization
 {
     public class CloudShould
     {
-        [TestCase(0, TestName = "be empty before any appending")]
-        [TestCase(1, TestName = "have 1 after appending 1")]
-        [TestCase(20, TestName = "have 20 after appending 20")]
-        [TestCase(5, TestName = "have 5 after appending 5")]
-        public void HaveExactAmount_AfterAppend(int amount)
+        [Test]
+        public void HaveNothingOnInit()
         {
             var cloud = new Cloud();
-            for (int i=0; i<amount; i++)
-                cloud.AppendRectangle(new Rectangle(120-i, 120-i, 2+i, 2+i));
-            cloud.Count.Should().Be(amount);
+            cloud.Should().BeEmpty();
+        }
+
+        [Test]
+        public void HaveRectangleAfterAppend()
+        {
+            var cloud = new Cloud();
+            cloud.AppendRectangle(new Rectangle(100, 50, 20, 10));
+            cloud.Should().HaveCount(1);
         }
 
         [TestCase(0, 0, 25, 25, false, 
