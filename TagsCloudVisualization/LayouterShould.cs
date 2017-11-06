@@ -7,17 +7,17 @@ namespace TagsCloudVisualization
 {
     public class LayouterShould
     {
-        private static CircularCloudLayouter _layout;
+        private static CircularCloudLayouter _layouter;
 
         private static void SaveVisualizationOnFailure()
         {
             var testResult = TestContext.CurrentContext.Result.Outcome;
-            var testName = TestContext.CurrentContext.Test.FullName;
+            var testName = TestContext.CurrentContext.Test.Name;
 
             if (Equals(testResult, ResultState.Failure) ||
                 Equals(testResult, ResultState.Error))
             {
-                Visualization.VisualizeLayout(_layout, testName);
+                Visualization.VisualizeLayouter(_layouter, testName);
             }
         }
 
@@ -30,8 +30,8 @@ namespace TagsCloudVisualization
             public void Initialize_WithGivenCenter(int x, int y)
             {
                 var expectedCenter = new Point(x, y);
-                _layout = new CircularCloudLayouter(new Point(x, y));
-                _layout.Center.Should().Be(expectedCenter);
+                _layouter = new CircularCloudLayouter(new Point(x, y));
+                _layouter.Center.Should().Be(expectedCenter);
             }
 
             [TearDown]
@@ -55,8 +55,8 @@ namespace TagsCloudVisualization
 
             public void PlaceFirstRect_InCenter(int centerX, int centerY, int width, int height)
             {
-                _layout = new CircularCloudLayouter(new Point(centerX, centerY));
-                var nextRectangle = _layout.PutNextRectangle(new Size(width, height));
+                _layouter = new CircularCloudLayouter(new Point(centerX, centerY));
+                var nextRectangle = _layouter.PutNextRectangle(new Size(width, height));
                 var expectedRectangle = new Rectangle(centerX - width / 2, centerY - height / 2, width, height);
 
                 nextRectangle.Should().Be(expectedRectangle);
@@ -75,12 +75,12 @@ namespace TagsCloudVisualization
             [TestCase(128, 128, 120, 100, 60, 50,
                 TestName = "when center is (128, 128), rectangles are 120x100 and 60x50")]
             [TestCase(120, 50, 100, 110, 50, 90,
-                TestName = "center is (120, 50), rectangles are 100x110 and 50x90")]
+                TestName = "when center is (120, 50), rectangles are 100x110 and 50x90")]
             public void PlaceTwoRects_WithoutIntersections(int centerX, int centerY, int w1, int h1, int w2, int h2)
             {
-                _layout = new CircularCloudLayouter(new Point(centerX, centerY));
-                var firstRectangle = _layout.PutNextRectangle(new Size(w1, h1));
-                var secondRectangle = _layout.PutNextRectangle(new Size(w2, h2));
+                _layouter = new CircularCloudLayouter(new Point(centerX, centerY));
+                var firstRectangle = _layouter.PutNextRectangle(new Size(w1, h1));
+                var secondRectangle = _layouter.PutNextRectangle(new Size(w2, h2));
 
                 firstRectangle.IntersectsWith(secondRectangle).Should().BeFalse();
             }
