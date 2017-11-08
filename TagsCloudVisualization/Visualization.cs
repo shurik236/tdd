@@ -42,7 +42,7 @@ namespace TagsCloudVisualization
             g.FillRectangle(new SolidBrush(Color.Blue), 0, 0, center.X * 2, center.Y * 2);
             g.DrawLine(Pens.Red, center.X, 0, center.X, center.Y * 2);
             g.DrawLine(Pens.Red, 0, center.Y, center.X * 2, center.Y);
-            foreach (var rect in layouter.Cloud.Rectangles)
+            foreach (var rect in layouter.Cloud)
             {
                 g.DrawRectangle(Pens.White, rect);
             }
